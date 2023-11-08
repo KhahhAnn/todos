@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
+import { AiOutlineDown } from "react-icons/ai";
 
-const Header = ({ addTodo, toDoItems }) => {
+const Header = ({ addTodo, toDoItems, onCheckAll }) => {
    const inputRef = useRef();
    const [toDo, setToDo] = useState("");
 
@@ -22,6 +23,7 @@ const Header = ({ addTodo, toDoItems }) => {
    return (
       <header>
          <h1 className="header-text">todos</h1>
+         <AiOutlineDown className="check-all" onClick={onCheckAll}/>
          <input
             ref={inputRef}
             className="input-todo"

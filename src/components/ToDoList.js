@@ -27,6 +27,13 @@ const ToDoList = () => {
       setToDoItems(newToDoItems);
    };
 
+   const handleEdit = (index, newText) => {
+      const newToDoItems = toDoItems.map((todo, i) =>
+         i === index ? { ...todo, text: newText } : todo
+      );
+      setToDoItems(newToDoItems);
+   };
+
    const handleToggle = (index) => {
       const newToDoItems = toDoItems.map((todo, i) =>
          i === index ? { ...todo, completed: !todo.completed } : todo
@@ -43,11 +50,17 @@ const ToDoList = () => {
       setToDoItems(newToDoItems);
    };
 
+   const handleCheckAll = () => {
+      const areAllCompleted = toDoItems.every(todo => todo.completed);
+      const updatedToDoItems = toDoItems.map(todo => ({ ...todo, completed: !areAllCompleted }));
+      setToDoItems(updatedToDoItems);
+   }
+
    return (
       <div>
-         <Header addTodo={addTodo} toDoItems={toDoItems} />
-         <Body toDoItems={filteredToDoItems} onDelete={handleDelete} onToggle={handleToggle}/>
-         <Footer toDoItems={toDoItems} onFilterChange={handleFilterChange} onClearCompleted={handleClearCompleted}/>
+         <Header addTodo={addTodo} toDoItems={toDoItems} onCheckAll={handleCheckAll} />
+         <Body toDoItems={filteredToDoItems} onDelete={handleDelete} onToggle={handleToggle} onEdit={handleEdit} />
+         <Footer toDoItems={toDoItems} onFilterChange={handleFilterChange} onClearCompleted={handleClearCompleted} />
       </div>
    );
 }

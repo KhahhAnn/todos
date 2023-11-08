@@ -69,6 +69,46 @@
    border-radius: 3px;
    color: #777777;
 }
+
 .footer-container a:focus {
    border-color: rgba(175, 47, 47, 0.2);
+}
+
+.check-all {
+   position: absolute;
+   font-size: 24px;
+   margin-top: 30px;
+   margin-left: 10px;
+   color: #737373;
+   cursor: pointer;
+}
+
+.check-all:hover {
+   color: #000;
+}
+
+.input-edit {
+   border: none;
+   font-size: 20px;
+   width: 100%;
+   outline: none;
+   width: 600px;
+}
+
+.save-button,
+.cancel-button {
+   padding: 5px 10px;
+   margin-right: 10px;
+   cursor: pointer;
+   border-radius: 5px;
+}
+
+.save-button {
+   background-color: #4caf50;
+   color: #fff;
+}
+
+.cancel-button {
+   background-color: #e6360a;
+   color: #fff;
 }
