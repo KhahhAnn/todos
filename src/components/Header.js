@@ -1,14 +1,9 @@
-import { useState, useRef, useEffect } from "react";
+import { useRef, useState } from "react";
 import { AiOutlineDown } from "react-icons/ai";
 
 const Header = ({ addTodo, toDoItems, onCheckAll }) => {
    const inputRef = useRef();
    const [toDo, setToDo] = useState("");
-
-   useEffect(() => {
-      setToDo("");
-      inputRef.current.focus();
-   }, [toDoItems]);
 
    const handleInputChange = (e) => {
       setToDo(e.target.value);
@@ -16,6 +11,7 @@ const Header = ({ addTodo, toDoItems, onCheckAll }) => {
 
    const handleKeyPress = (e) => {
       if (e.key === "Enter" && toDo.trim() !== "") {
+         setToDo("");
          addTodo(toDo.trim());
       }
    };

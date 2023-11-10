@@ -1,9 +1,9 @@
-const Footer = ({ toDoItems, onFilterChange }) => {
+const Footer = ({ toDoItems, onFilterChange, onClearCompleted }) => {
    const handleFilterChange = (filterType) => {
       onFilterChange(filterType);
    };
 
-   const completedCount = toDoItems.filter(todo => todo.completed).length;
+   const completedCount = toDoItems.filter(todo => todo.completed === true).length;
 
    return (
       <div className="footer-container">
@@ -16,7 +16,7 @@ const Footer = ({ toDoItems, onFilterChange }) => {
          <div>
             {completedCount > 0 && (
                <div>
-                  <a href="#" onClick={() => handleFilterChange("active")}>Clear completed</a>
+                  <a href="#" onClick={() => onClearCompleted()}>Clear completed</a>
                </div>
             )}
          </div>
