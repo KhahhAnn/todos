@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { AiOutlineDown } from "react-icons/ai";
 
-const Header = ({ addTodo, toDoItems, onCheckAll }) => {
+const Header = ({ addTodo, toDoItems, onCheckAll, theme }) => {
    const inputRef = useRef();
    const [toDo, setToDo] = useState("");
 
@@ -17,12 +17,12 @@ const Header = ({ addTodo, toDoItems, onCheckAll }) => {
    };
 
    return (
-      <header>
+      <header className={`${theme  === "dark" ? "dark-header"  : ""}`}>
          <h1 className="header-text">todos</h1>
-         <AiOutlineDown className="check-all" onClick={onCheckAll}/>
+         <AiOutlineDown className= "check-all"  onClick={onCheckAll}/>
          <input
             ref={inputRef}
-            className="input-todo"
+            className= "input-todo" 
             placeholder="What needs to be done"
             onChange={handleInputChange}
             onKeyPress={handleKeyPress}

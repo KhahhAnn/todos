@@ -5,28 +5,41 @@ import Body from "./Body";
 import Footer from "./Footer";
 import { v4 as uuid } from "uuid";
 import { actionStatus } from "../utils/utils";
+import { useTheme } from "./ThemeContext";
+import ToggleTheme from "./ToggleTheme";
 
 const ToDoList = () => {
    const [toDoItems, setToDoItems] = useState([]);
    const [filteredToDoItems, setFilteredToDoItems] = useState([]);
    const [filterType, setFilterType] = useState(actionStatus.ALL);
+   const [completeToDoItems, setCompleteToDoItems] = useState([]);
+   const [activeToDoItems, setActiveToDoItems] = useState([]);
+   const {theme, toggleTheme} = useTheme();
+
+   useEffect(() => {
+      setCompleteToDoItems(toDoItems.filter(todo => todo.completed));
+   }, [toDoItems]);
+   useEffect(() => {
+      setActiveToDoItems(toDoItems.filter(todo => !todo.completed));
+   }, [toDoItems]);
 
    useEffect(() => {
       switch (filterType) {
          case actionStatus.ALL:
-            setFilteredToDoItems(toDoItems);
+            setFilteredToDoItems(toDoItems)
             break;
          case actionStatus.ACTIVATE:
-            setFilteredToDoItems(toDoItems.filter(todo => !todo.completed));
+            setFilteredToDoItems(activeToDoItems);
             break;
          case actionStatus.COMPLETE:
-            setFilteredToDoItems(toDoItems.filter(todo => todo.completed));
+            setFilteredToDoItems(completeToDoItems);
             break;
          default:
             setFilteredToDoItems(toDoItems);
             break;
       }
    }, [toDoItems, filterType]);
+
 
    const addTodo = (text) => {
       setToDoItems(prevToDoItems => [{ id: uuid(), content: text, completed: false }, ...prevToDoItems]);
@@ -67,10 +80,11 @@ const ToDoList = () => {
    };
 
    return (
-      <div>
-         <Header addTodo={addTodo} toDoItems={toDoItems} onCheckAll={handleCheckAll} />
-         <Body toDoItems={filteredToDoItems} onDelete={handleDelete} onToggle={handleToggle} onEdit={handleEdit} />
-         <Footer toDoItems={toDoItems} onFilterChange={handleFilterChange} onClearCompleted={handleClearCompleted} />
+      <div className={`${theme  === "dark" ? "dark-theme"  : ""}`}>
+         <ToggleTheme />
+         <Header addTodo={addTodo} toDoItems={toDoItems} onCheckAll={handleCheckAll} theme={theme}/>
+         <Body toDoItems={filteredToDoItems} onDelete={handleDelete} onToggle={handleToggle} onEdit={handleEdit} theme={theme}/>
+         <Footer toDoItems={toDoItems} onFilterChange={handleFilterChange} onClearCompleted={handleClearCompleted} theme={theme}/>
       </div>
    );
 }

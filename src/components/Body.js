@@ -2,9 +2,6 @@ import React, { useState, useEffect } from "react";
 import ToDoItem from "./ToDoItem";
 
 const Body = ({ toDoItems, onDelete, onToggle, onEdit }) => {
-   const [hoveredId, setHoveredId] = useState(null);
-   const [editableId, setEditableId] = useState(null);
-   const [editText, setEditText] = useState("");
    const [itemsToShow, setItemsToShow] = useState(5);
    const [isLoading, setIsLoading] = useState(false);
 
@@ -12,24 +9,11 @@ const Body = ({ toDoItems, onDelete, onToggle, onEdit }) => {
       onDelete(id);
    };
 
-   const handleEdit = (id) => {
-      setEditableId(id);
-      const todoToEdit = toDoItems.find((todo) => todo.id === id);
-      setEditText(todoToEdit.content);
-   };
-
-   const handleSaveEdit = (id) => {
-      onEdit(id, editText);
-      setEditableId(null);
-   };
-
-   const handleCancelEdit = () => {
-      setEditableId(null);
-   };
-
    const handleScroll = (event) => {
       const element = event.target;
-      if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+      const scrollPercentage = (element.scrollTop + element.clientHeight) / element.scrollHeight;
+
+      if (scrollPercentage > 0.8) {
          fetchMoreData();
       }
    };
@@ -52,7 +36,7 @@ const Body = ({ toDoItems, onDelete, onToggle, onEdit }) => {
          id="scrollableDiv"
          style={{
             overflowY: toDoItems.length > 5 ? "scroll" : "auto",
-            maxHeight: "300px", 
+            maxHeight: "250px",
          }}
          onScroll={handleScroll}
       >
@@ -60,18 +44,9 @@ const Body = ({ toDoItems, onDelete, onToggle, onEdit }) => {
             <ToDoItem
                key={todo.id}
                todo={todo}
-               hoveredId={hoveredId}
-               editableId={editableId}
-               editText={editText}
                onToggle={onToggle}
                onEdit={onEdit}
                onDelete={onDelete}
-               setHoveredId={setHoveredId}
-               setEditableId={setEditableId}
-               setEditText={setEditText}
-               handleSaveEdit={handleSaveEdit}
-               handleCancelEdit={handleCancelEdit}
-               handleEdit={handleEdit}
                handleDelete={handleDelete}
             />
          ))}

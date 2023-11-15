@@ -1,29 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { AiFillEdit } from "react-icons/ai";
 
 const ToDoItem = ({
    todo,
-   hoveredId,
-   editableId,
-   editText,
    onToggle,
    onEdit,
    onDelete,
-   setHoveredId,
-   setEditableId,
-   setEditText,
-   handleSaveEdit,
-   handleCancelEdit,
-   handleEdit,
-   handleDelete
 }) => {
+   const [editText, setEditText] = useState("");
+   const [editableId, setEditableId] = useState(null);
+
+   const handleEdit = () => {
+      setEditableId(todo.id);
+      setEditText(todo.content);
+   };
+
+   const handleCancelEdit = () => {
+      setEditableId(null);
+   };
+
+   const handleSaveEdit = () => {
+      onEdit(todo.id, editText);
+      setEditableId(null);
+   };
+
+   const handleDelete = () => {
+      onDelete(todo.id);
+   };
+
    return (
       <div
          key={todo.id}
          className="to-do-item-container"
-         onMouseEnter={() => setHoveredId(todo.id)}
-         onMouseLeave={() => setHoveredId(null)}
       >
          <div className="checkbox-container">
             <input
@@ -56,37 +65,35 @@ const ToDoItem = ({
                )}
             </div>
             <div>
-               {hoveredId === todo.id && (
-                  <div>
-                     {editableId === todo.id ? (
-                        <>
-                           <button
-                              className="save-button"
-                              onClick={() => handleSaveEdit(todo.id)}
-                           >
-                              Save
-                           </button>
-                           <button
-                              className="cancel-button"
-                              onClick={handleCancelEdit}
-                           >
-                              Cancel
-                           </button>
-                        </>
-                     ) : (
-                        <AiFillEdit
-                           className="edit-icon"
-                           style={{ color: "#e6360a", marginRight: 10 }}
-                           onClick={() => handleEdit(todo.id)}
-                        />
-                     )}
-                     <FaTrash
-                        className="delete-icon"
+               <div>
+                  {editableId === todo.id ? (
+                     <>
+                        <button
+                           className="save-button"
+                           onClick={handleSaveEdit}
+                        >
+                           Save
+                        </button>
+                        <button
+                           className="cancel-button"
+                           onClick={handleCancelEdit}
+                        >
+                           Cancel
+                        </button>
+                     </>
+                  ) : (
+                     <AiFillEdit
+                        className="edit-icon"
                         style={{ color: "#e6360a", marginRight: 10 }}
-                        onClick={() => handleDelete(todo.id)}
+                        onClick={handleEdit}
                      />
-                  </div>
-               )}
+                  )}
+                  <FaTrash
+                     className="delete-icon"
+                     style={{ color: "#e6360a", marginRight: 10 }}
+                     onClick={handleDelete}
+                  />
+               </div>
             </div>
          </div>
       </div>

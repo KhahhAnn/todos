@@ -1,4 +1,4 @@
-const Footer = ({ toDoItems, onFilterChange, onClearCompleted }) => {
+const Footer = ({ toDoItems, onFilterChange, onClearCompleted, theme }) => {
    const handleFilterChange = (filterType) => {
       onFilterChange(filterType);
    };
@@ -8,7 +8,7 @@ const Footer = ({ toDoItems, onFilterChange, onClearCompleted }) => {
    return (
       <div className="footer-container">
          <h3>{toDoItems.length - completedCount} items left</h3>
-         <div className="option-container">
+         <div className={`option-container ${theme  === "dark" ? "dark-option"  : ""}`}>
             <a href="#" onClick={() => handleFilterChange("all")}>All</a>
             <a href="#" onClick={() => handleFilterChange("active")}>Active</a>
             <a href="#" onClick={() => handleFilterChange("complete")}>Complete</a>
