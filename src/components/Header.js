@@ -1,7 +1,10 @@
 import { useRef, useState } from "react";
 import { AiOutlineDown } from "react-icons/ai";
+import { useDispatch } from "react-redux";
+import { addToDo } from "../actions/ToDo";
 
-const Header = ({ addTodo, toDoItems, onCheckAll, theme }) => {
+const Header = ({onCheckAll, theme }) => {
+   const dispatch = useDispatch();
    const inputRef = useRef();
    const [toDo, setToDo] = useState("");
 
@@ -12,7 +15,7 @@ const Header = ({ addTodo, toDoItems, onCheckAll, theme }) => {
    const handleKeyPress = (e) => {
       if (e.key === "Enter" && toDo.trim() !== "") {
          setToDo("");
-         addTodo(toDo.trim());
+         dispatch(addToDo(toDo.trim()));
       }
    };
 

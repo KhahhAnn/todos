@@ -1,35 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import ToDoItem from "./ToDoItem";
+import LoadingWrapper from "../HOC/LoadingWrapper";
 
-const Body = ({ toDoItems, onDelete, onToggle, onEdit }) => {
-   const [itemsToShow, setItemsToShow] = useState(5);
-   const [isLoading, setIsLoading] = useState(false);
-
-   const handleDelete = (id) => {
-      onDelete(id);
-   };
-
-   const handleScroll = (event) => {
-      const element = event.target;
-      const scrollPercentage = (element.scrollTop + element.clientHeight) / element.scrollHeight;
-
-      if (scrollPercentage > 0.8) {
-         fetchMoreData();
-      }
-   };
-
-   const fetchMoreData = () => {
-      setIsLoading(true);
-      setTimeout(() => {
-         setItemsToShow((prevItems) => prevItems + 5);
-         setIsLoading(false);
-      }, 1000);
-   };
-
-   useEffect(() => {
-      setItemsToShow(5);
-   }, [toDoItems]);
-
+const Body = ({ onDelete, onToggle, onEdit, toDoItems, itemsToShow, onScroll, loading }) => {
    return (
       <div
          className="todo-container"
@@ -38,7 +11,7 @@ const Body = ({ toDoItems, onDelete, onToggle, onEdit }) => {
             overflowY: toDoItems.length > 5 ? "scroll" : "auto",
             maxHeight: "250px",
          }}
-         onScroll={handleScroll}
+         onScroll={onScroll}
       >
          {toDoItems.slice(0, itemsToShow).map((todo) => (
             <ToDoItem
@@ -47,12 +20,13 @@ const Body = ({ toDoItems, onDelete, onToggle, onEdit }) => {
                onToggle={onToggle}
                onEdit={onEdit}
                onDelete={onDelete}
-               handleDelete={handleDelete}
+               handleDelete={onDelete}
             />
          ))}
-         {isLoading && <p>Loading...</p>}
+         {loading && <p>Loading...</p>}
       </div>
    );
 };
 
-export default Body;
+const BodyWithLoading = LoadingWrapper(Body)
+export default BodyWithLoading;

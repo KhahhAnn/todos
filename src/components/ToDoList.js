@@ -1,78 +1,61 @@
 import { useEffect, useState } from "react";
-import ToDoCss from "../Css/ToDoCss.css";
+import "../Css/ToDoCss.css";
 import Header from "./Header";
 import Body from "./Body";
 import Footer from "./Footer";
-import { v4 as uuid } from "uuid";
 import { actionStatus } from "../utils/utils";
 import { useTheme } from "./ThemeContext";
 import ToggleTheme from "./ToggleTheme";
+import { useDispatch, useSelector } from "react-redux";
+import { addToDo, checkAll, clearComplete, deleteToDo, toggleToDo, updateToDo } from "../actions/ToDo";
 
 const ToDoList = () => {
-   const [toDoItems, setToDoItems] = useState([]);
+   const dispatch = useDispatch();
+   const toDoItems = useSelector((state) => state.toDo.toDoList)
+   console.log(toDoItems);
    const [filteredToDoItems, setFilteredToDoItems] = useState([]);
    const [filterType, setFilterType] = useState(actionStatus.ALL);
-   const [completeToDoItems, setCompleteToDoItems] = useState([]);
-   const [activeToDoItems, setActiveToDoItems] = useState([]);
-   const {theme, toggleTheme} = useTheme();
-
+   const { theme } = useTheme();
    useEffect(() => {
-      setCompleteToDoItems(toDoItems.filter(todo => todo.completed));
-   }, [toDoItems]);
-   useEffect(() => {
-      setActiveToDoItems(toDoItems.filter(todo => !todo.completed));
-   }, [toDoItems]);
-
-   useEffect(() => {
-      switch (filterType) {
-         case actionStatus.ALL:
-            setFilteredToDoItems(toDoItems)
-            break;
-         case actionStatus.ACTIVATE:
-            setFilteredToDoItems(activeToDoItems);
-            break;
-         case actionStatus.COMPLETE:
-            setFilteredToDoItems(completeToDoItems);
-            break;
-         default:
-            setFilteredToDoItems(toDoItems);
-            break;
+      if (filterType === actionStatus.ACTIVATE || filterType === actionStatus.COMPLETE) {
+         switch (filterType) {
+            case actionStatus.ACTIVATE:
+               setFilteredToDoItems(toDoItems.filter((todo) => !todo.completed));
+               break;
+            case actionStatus.COMPLETE:
+               setFilteredToDoItems(toDoItems.filter((todo) => todo.completed));
+               break;
+            default:
+               break;
+         }
+      } else {
+         setFilteredToDoItems(toDoItems);
       }
    }, [toDoItems, filterType]);
 
 
    const addTodo = (text) => {
-      setToDoItems(prevToDoItems => [{ id: uuid(), content: text, completed: false }, ...prevToDoItems]);
+      dispatch(addToDo(text));
    };
 
    const handleDelete = (id) => {
-      const newToDoItems = toDoItems.filter((todo) => todo.id !== id);
-      setToDoItems(newToDoItems);
+      dispatch(deleteToDo(id));
    };
 
    const handleEdit = (id, newText) => {
-      const newToDoItems = toDoItems.map((todo) =>
-         todo.id === id ? { ...todo, content: newText } : todo
-      );
-      setToDoItems(newToDoItems);
+      dispatch(updateToDo(id, newText));
    };
 
    const handleToggle = (id) => {
-      const newToDoItems = toDoItems.map((todo) =>
-         todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      );
-      setToDoItems(newToDoItems);
+      dispatch(toggleToDo(id))
    };
 
    const handleClearCompleted = () => {
-      const newToDoItems = toDoItems.filter(todo => !todo.completed);
-      setToDoItems(newToDoItems);
+      dispatch(clearComplete())
    };
 
    const handleCheckAll = () => {
-      const areAllCompleted = toDoItems.every(todo => todo.completed);
-      const updatedToDoItems = toDoItems.map(todo => ({ ...todo, completed: !areAllCompleted }));
-      setToDoItems(updatedToDoItems);
+      dispatch(checkAll())
    }
 
    const handleFilterChange = (newFilterType) => {
@@ -80,11 +63,11 @@ const ToDoList = () => {
    };
 
    return (
-      <div className={`${theme  === "dark" ? "dark-theme"  : ""}`}>
+      <div className={`${theme === "dark" ? "dark-theme" : ""}`}>
          <ToggleTheme />
-         <Header addTodo={addTodo} toDoItems={toDoItems} onCheckAll={handleCheckAll} theme={theme}/>
-         <Body toDoItems={filteredToDoItems} onDelete={handleDelete} onToggle={handleToggle} onEdit={handleEdit} theme={theme}/>
-         <Footer toDoItems={toDoItems} onFilterChange={handleFilterChange} onClearCompleted={handleClearCompleted} theme={theme}/>
+         <Header addTodo={addTodo} toDoItems={toDoItems} onCheckAll={handleCheckAll} theme={theme} />
+         <Body toDoItems={filteredToDoItems} onDelete={handleDelete} onToggle={handleToggle} onEdit={handleEdit} theme={theme} />
+         <Footer toDoItems={toDoItems} onFilterChange={handleFilterChange} onClearCompleted={handleClearCompleted} theme={theme} />
       </div>
    );
 }
