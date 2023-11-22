@@ -14,18 +14,18 @@ const ToDoList = () => {
    const [filterType, setFilterType] = useState(actionStatus.ALL);
    const { theme } = useTheme();
    useEffect(() => {
-      setFilteredToDoItems(produce(toDoItems, (draft) => {
+      setFilteredToDoItems(produce(toDoItems, (draftState) => {
          if (filterType === actionStatus.ACTIVATE || filterType === actionStatus.COMPLETE) {
             switch (filterType) {
                case actionStatus.ACTIVATE:
-                  return draft.filter((todo) => !todo.completed);
+                  return draftState.filter((todo) => !todo.completed);
                case actionStatus.COMPLETE:
-                  return draft.filter((todo) => todo.completed);
+                  return draftState.filter((todo) => todo.completed);
                default:
                   break;
             }
          }
-         return draft;
+         return draftState;
       }));
    }, [toDoItems, filterType]);
 
