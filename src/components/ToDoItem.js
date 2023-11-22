@@ -1,21 +1,21 @@
 import React, { useState } from "react";
-import { FaTrash } from "react-icons/fa";
 import { AiFillEdit } from "react-icons/ai";
+import { FaTrash } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { deleteToDo, updateToDo } from "../actions/ToDo";
 
 const ToDoItem = ({
    todo,
    onToggle,
-   onEdit,
    onDelete,
+   onEdit
 }) => {
    const [editText, setEditText] = useState("");
    const [editableId, setEditableId] = useState(null);
 
-   const handleEdit = () => {
-      setEditableId(todo.id);
-      setEditText(todo.content);
+   const handleDelete = () => {
+      onDelete(todo.id);
    };
-
    const handleCancelEdit = () => {
       setEditableId(null);
    };
@@ -25,9 +25,6 @@ const ToDoItem = ({
       setEditableId(null);
    };
 
-   const handleDelete = () => {
-      onDelete(todo.id);
-   };
 
    return (
       <div
@@ -85,7 +82,7 @@ const ToDoItem = ({
                      <AiFillEdit
                         className="edit-icon"
                         style={{ color: "#e6360a", marginRight: 10 }}
-                        onClick={handleEdit}
+                        onClick={() => setEditableId(todo.id)}
                      />
                   )}
                   <FaTrash

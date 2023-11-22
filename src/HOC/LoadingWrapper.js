@@ -1,30 +1,38 @@
-import React from "react";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useRef, useState } from "react";
 
 const LoadingWrapper = (WrappedComponent) => {
-   const WithLoadingComponent = ({ ...props }) => {
-      const toDoItems = useSelector((state) => state.toDo.toDoList);
-      const [itemsToShow, setItemsToShow] = useState(5);
+   return function WithLoadingComponent(props) {
+      const {
+         items: initialToDoItems,
+         numberToShow = 5,
+         endScrollPosition = 20,
+      } = props;
+
+      const [itemsToShow, setItemsToShow] = useState(numberToShow);
       const [loading, setLoading] = useState(false);
+
+      const isGettingRef = useRef(false);
 
       const handleScroll = (event) => {
          const element = event.target;
-         const scrollPercentage =
-            (element.scrollTop + element.clientHeight) / element.scrollHeight;
-
-         if (scrollPercentage > 0.8) {
+         if (
+            element.scrollTop + element.clientHeight >=
+            element.scrollHeight - endScrollPosition &&
+            !isGettingRef.current
+         ) {
+            isGettingRef.current = true;
             fetchMoreData();
          }
       };
 
       const fetchMoreData = () => {
-         if (itemsToShow >= toDoItems.length) {
+         if (itemsToShow >= initialToDoItems.length) {
             return;
          }
          setLoading(true);
          setTimeout(() => {
-            setItemsToShow((prevItems) => prevItems + 5);
+            setItemsToShow((prevItems) => prevItems + numberToShow);
+            isGettingRef.current = false;
             setLoading(false);
          }, 1000);
       };
@@ -32,7 +40,6 @@ const LoadingWrapper = (WrappedComponent) => {
       return (
          <WrappedComponent
             {...props}
-            toDoItems={toDoItems}
             itemsToShow={itemsToShow}
             onScroll={handleScroll}
             fetchMoreData={fetchMoreData}
@@ -40,8 +47,6 @@ const LoadingWrapper = (WrappedComponent) => {
          />
       );
    };
-
-   return WithLoadingComponent;
 };
 
 export default LoadingWrapper;

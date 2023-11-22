@@ -1,60 +1,50 @@
-import { ADD_TODO, CHECK_ALL, CLEAR_COMPLETE, DELETE_TODO, SET_FILTER_TYPE, TOGGLE_TODO, UPDATE_TODO } from "../actions/ToDo";
-import { actionStatus } from "../utils/utils";
+import { ADD_TODO, CHECK_ALL, CLEAR_COMPLETE, DELETE_TODO, TOGGLE_TODO, UPDATE_TODO } from "../actions/ToDo";
+import { produce } from "immer";
 
 const initialState = {
    toDoList: [],
 };
 
 const todoReducer = (state = initialState, action) => {
-   switch (action.type) {
-      case ADD_TODO: {
-         return {
-            ...state,
-            toDoList: [...state.toDoList, action.payload],
-         };
+   return produce(state, draftState => {
+      switch (action.type) {
+         case ADD_TODO: {
+            draftState.toDoList.unshift(action.payload);
+            break;
+         }
+         case DELETE_TODO: {
+            draftState.toDoList = draftState.toDoList.filter(todo => todo.id !== action.payload);
+            break;
+         }
+         case UPDATE_TODO: {
+            const todoIndex = draftState.toDoList.findIndex(todo => todo.id === action.payload.id);
+            if (todoIndex !== -1) {
+               draftState.toDoList[todoIndex].content = action.payload.newText;
+            }
+            break;
+         }
+         case TOGGLE_TODO: {
+            const todoIndex = draftState.toDoList.findIndex(todo => todo.id === action.payload.id);
+            if (todoIndex !== -1) {
+               draftState.toDoList[todoIndex].completed = !draftState.toDoList[todoIndex].completed;
+            }
+            break;
+         }
+         case CHECK_ALL: {
+            const areAllCompleted = draftState.toDoList.every(todo => todo.completed);
+            draftState.toDoList.forEach(todo => {
+               todo.completed = !areAllCompleted;
+            });
+            break;
+         }
+         case CLEAR_COMPLETE: {
+            draftState.toDoList = draftState.toDoList.filter(todo => !todo.completed);
+            break;
+         }
+         default:
+            break;
       }
-      case DELETE_TODO: {
-         return {
-            ...state,
-            toDoList: state.toDoList.filter((todo) => todo.id !== action.payload),
-         };
-      }
-      case UPDATE_TODO: {
-         const updatedList = state.toDoList.map((todo) =>
-            todo.id === action.payload.id ? { ...todo, content: action.payload.newText } : todo
-         );
-         return {
-            ...state,
-            toDoList: updatedList,
-         };
-      }
-      case TOGGLE_TODO: {
-         const updatedList = state.toDoList.map((todo) =>
-            todo.id === action.payload.id ? { ...todo, completed: !todo.completed } : todo
-         );
-         return {
-            ...state,
-            toDoList: updatedList,
-         };
-      }
-      case CHECK_ALL: {
-         const areAllCompleted = state.toDoList.every(todo => todo.completed);
-         const updatedList = state.toDoList.map(todo => ({ ...todo, completed: !areAllCompleted }));
-         return {
-            ...state,
-            toDoList: updatedList,
-         };
-      }
-      case CLEAR_COMPLETE: {
-         const newToDoList = state.toDoList.filter(todo => !todo.completed);
-         return {
-            ...state,
-            toDoList: newToDoList,
-         };
-      }
-      default:
-         return state;
-   }
+   })
 };
 
 export default todoReducer;

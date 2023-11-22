@@ -1,13 +1,16 @@
 import { useRef, useState } from "react";
 import { AiOutlineDown } from "react-icons/ai";
 import { useDispatch } from "react-redux";
-import { addToDo } from "../actions/ToDo";
+import { addToDo, checkAll } from "../actions/ToDo";
 
-const Header = ({onCheckAll, theme }) => {
+const Header = ({theme }) => {
    const dispatch = useDispatch();
    const inputRef = useRef();
    const [toDo, setToDo] = useState("");
 
+   const handleCheckAll = () => {
+      dispatch(checkAll())
+   }
    const handleInputChange = (e) => {
       setToDo(e.target.value);
    };
@@ -22,7 +25,7 @@ const Header = ({onCheckAll, theme }) => {
    return (
       <header className={`${theme  === "dark" ? "dark-header"  : ""}`}>
          <h1 className="header-text">todos</h1>
-         <AiOutlineDown className= "check-all"  onClick={onCheckAll}/>
+         <AiOutlineDown className= "check-all"  onClick={handleCheckAll}/>
          <input
             ref={inputRef}
             className= "input-todo" 

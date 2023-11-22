@@ -1,8 +1,15 @@
+import { useDispatch } from "react-redux";
+import { clearComplete } from "../actions/ToDo";
 import { actionStatus } from "../utils/utils";
 
-const Footer = ({ toDoItems, onFilterChange, onClearCompleted, theme }) => {
+const Footer = ({ toDoItems, onFilterChange, theme }) => {
+   const dispatch = useDispatch();
    const handleFilterChange = (filterType) => {
       onFilterChange(filterType);
+   };
+
+   const handleClearCompleted = () => {
+      dispatch(clearComplete())
    };
 
    const completedCount = toDoItems.filter(todo => todo.completed === true).length;
@@ -18,7 +25,7 @@ const Footer = ({ toDoItems, onFilterChange, onClearCompleted, theme }) => {
          <div>
             {completedCount > 0 && (
                <div>
-                  <a href="#" onClick={() => onClearCompleted()}>Clear completed</a>
+                  <a href="#" onClick={handleClearCompleted}>Clear completed</a>
                </div>
             )}
          </div>
