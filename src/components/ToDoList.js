@@ -7,27 +7,26 @@ import Footer from "./Footer";
 import Header from "./Header";
 import { useTheme } from "./ThemeContext";
 import ToggleTheme from "./ToggleTheme";
-
+import { produce } from "immer";
 const ToDoList = () => {
    const toDoItems = useSelector((state) => state.toDo.toDoList)
    const [filteredToDoItems, setFilteredToDoItems] = useState([]);
    const [filterType, setFilterType] = useState(actionStatus.ALL);
    const { theme } = useTheme();
    useEffect(() => {
-      if (filterType === actionStatus.ACTIVATE || filterType === actionStatus.COMPLETE) {
-         switch (filterType) {
-            case actionStatus.ACTIVATE:
-               setFilteredToDoItems(toDoItems.filter((todo) => !todo.completed));
-               break;
-            case actionStatus.COMPLETE:
-               setFilteredToDoItems(toDoItems.filter((todo) => todo.completed));
-               break;
-            default:
-               break;
+      setFilteredToDoItems(produce(toDoItems, (draft) => {
+         if (filterType === actionStatus.ACTIVATE || filterType === actionStatus.COMPLETE) {
+            switch (filterType) {
+               case actionStatus.ACTIVATE:
+                  return draft.filter((todo) => !todo.completed);
+               case actionStatus.COMPLETE:
+                  return draft.filter((todo) => todo.completed);
+               default:
+                  break;
+            }
          }
-      } else {
-         setFilteredToDoItems(toDoItems);
-      }
+         return draft;
+      }));
    }, [toDoItems, filterType]);
 
    const handleFilterChange = (newFilterType) => {
@@ -38,7 +37,7 @@ const ToDoList = () => {
       <div className={`${theme === "dark" ? "dark-theme" : ""}`}>
          <ToggleTheme />
          <Header theme={theme} />
-         <Body items={filteredToDoItems}  theme={theme} />
+         <Body items={filteredToDoItems} theme={theme} />
          <Footer toDoItems={toDoItems} onFilterChange={handleFilterChange} theme={theme} />
       </div>
    );
