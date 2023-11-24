@@ -1,23 +1,8 @@
 import React from "react";
-import { useDispatch } from "react-redux";
 import LoadingWrapper from "../HOC/LoadingWrapper";
-import { deleteToDo, toggleToDo, updateToDo } from "../actions/ToDo";
 import ToDoItem from "./ToDoItem";
 
 const Body = ({ items, itemsToShow, onScroll, loading }) => {
-   const dispatch = useDispatch();
-
-   const handleDelete = (id) => {
-      dispatch(deleteToDo(id));
-   };
-
-   const handleEdit = (id, newText) => {
-      dispatch(updateToDo(id, newText));
-   };
-
-   const handleToggle = (id) => {
-      dispatch(toggleToDo(id));
-   };
 
    return (
       <div
@@ -33,9 +18,6 @@ const Body = ({ items, itemsToShow, onScroll, loading }) => {
             <ToDoItem
                key={todo.id}
                todo={todo}
-               onToggle={handleToggle}
-               onEdit={handleEdit}
-               onDelete={handleDelete}
             />
          ))}
          {loading && <p>Loading...</p>}

@@ -2,29 +2,29 @@ import React, { useState } from "react";
 import { AiFillEdit } from "react-icons/ai";
 import { FaTrash } from "react-icons/fa";
 import { useDispatch } from "react-redux";
-import { deleteToDo, updateToDo } from "../actions/ToDo";
+import { deleteToDo, toggleToDo, updateToDo } from "../actions/ToDo";
 
-const ToDoItem = ({
-   todo,
-   onToggle,
-   onDelete,
-   onEdit
-}) => {
+const ToDoItem = ({ todo }) => {
    const [editText, setEditText] = useState("");
    const [editableId, setEditableId] = useState(null);
+   const dispatch = useDispatch();
 
    const handleDelete = () => {
-      onDelete(todo.id);
+      dispatch(deleteToDo(todo.id));
    };
+
    const handleCancelEdit = () => {
       setEditableId(null);
    };
 
    const handleSaveEdit = () => {
-      onEdit(todo.id, editText);
+      dispatch(updateToDo(todo.id, editText));
       setEditableId(null);
    };
 
+   const handleToggle = () => {
+      dispatch(toggleToDo(todo.id));
+   };
 
    return (
       <div
@@ -35,7 +35,7 @@ const ToDoItem = ({
             <input
                className="toggle"
                type="checkbox"
-               onChange={() => onToggle(todo.id)}
+               onChange={handleToggle}
                checked={todo.completed}
             />
          </div>

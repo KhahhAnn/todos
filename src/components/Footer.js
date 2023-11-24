@@ -1,9 +1,10 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { clearComplete } from "../actions/ToDo";
 import { actionStatus } from "../utils/utils";
 
-const Footer = ({ toDoItems, onFilterChange, theme }) => {
+const Footer = ({ onFilterChange, theme }) => {
    const dispatch = useDispatch();
+   const toDoItems = useSelector((state) => state.toDo.toDoList)
    const handleFilterChange = (filterType) => {
       onFilterChange(filterType);
    };

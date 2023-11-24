@@ -38,7 +38,7 @@ const ToDoList = () => {
          <ToggleTheme />
          <Header theme={theme} />
          <Body items={filteredToDoItems} theme={theme} />
-         <Footer toDoItems={toDoItems} onFilterChange={handleFilterChange} theme={theme} />
+         <Footer onFilterChange={handleFilterChange} theme={theme} />
       </div>
    );
 }
