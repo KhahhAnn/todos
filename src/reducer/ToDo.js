@@ -1,6 +1,7 @@
 import { ADD_TODO, CHECK_ALL, CLEAR_COMPLETE, DELETE_TODO, TOGGLE_TODO, UPDATE_TODO } from "../actions/ToDo";
 import { produce } from "immer";
 
+
 const initialState = {
    toDoList: [],
 };

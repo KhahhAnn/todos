@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { AiOutlineDown } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 import { addToDo, checkAll } from "../actions/ToDo";
+import request from "../utils/request";
 
 const Header = ({theme }) => {
    const dispatch = useDispatch();
@@ -15,10 +16,18 @@ const Header = ({theme }) => {
       setToDo(e.target.value);
    };
 
-   const handleKeyPress = (e) => {
+   const handleKeyPress = async (e) => {
       if (e.key === "Enter" && toDo.trim() !== "") {
-         setToDo("");
-         dispatch(addToDo(toDo.trim()));
+         try{
+            const response = await request.post("todo", {
+               content: toDo.trim(),
+               complete: false,
+            })
+            dispatch(addToDo(response.data));
+            setToDo("");
+         } catch (error) {
+            console.error(error);
+         }
       }
    };
 

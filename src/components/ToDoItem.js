@@ -3,13 +3,20 @@ import { AiFillEdit } from "react-icons/ai";
 import { FaTrash } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { deleteToDo, toggleToDo, updateToDo } from "../actions/ToDo";
+import request from "../utils/request";
 
 const ToDoItem = ({ todo }) => {
    const [editText, setEditText] = useState("");
    const [editableId, setEditableId] = useState(null);
    const dispatch = useDispatch();
 
-   const handleDelete = () => {
+   const handleDelete = async () => {
+      try {
+         await request.delete(`todo/${todo.id}`);
+         dispatch(deleteToDo(todo.id));
+      } catch (error) {
+         console.error(error);
+      }
       dispatch(deleteToDo(todo.id));
    };
 
@@ -17,13 +24,23 @@ const ToDoItem = ({ todo }) => {
       setEditableId(null);
    };
 
-   const handleSaveEdit = () => {
-      dispatch(updateToDo(todo.id, editText));
-      setEditableId(null);
+   const handleSaveEdit = async () => {
+      try {
+         await request.put(`todo/${todo.id}`, { content: editText });
+         dispatch(updateToDo(todo.id, editText));
+         setEditableId(null);
+      } catch (error) {
+         console.error("Error updating todo:", error);
+      }
    };
 
-   const handleToggle = () => {
-      dispatch(toggleToDo(todo.id));
+   const handleToggle = async () => {
+      try {
+         await request.put(`todo/${todo.id}`, { completed: !todo.completed });
+         dispatch(toggleToDo(todo.id));
+      } catch (error) {
+         console.error("Error toggling todo:", error);
+      }
    };
 
    return (
