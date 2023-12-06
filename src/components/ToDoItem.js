@@ -11,9 +11,9 @@ const ToDoItem = ({ todo }) => {
    const dispatch = useDispatch();
 
    const handleDelete = async () => {
+      dispatch(deleteToDo(todo.id));
       try {
          await request.delete(`todo/${todo.id}`);
-         dispatch(deleteToDo(todo.id));
       } catch (error) {
          console.error(error);
       }
@@ -25,22 +25,25 @@ const ToDoItem = ({ todo }) => {
    };
 
    const handleSaveEdit = async () => {
+      dispatch(updateToDo(todo.id, editText));
+      setEditableId(null);
       try {
          await request.put(`todo/${todo.id}`, { content: editText });
-         dispatch(updateToDo(todo.id, editText));
-         setEditableId(null);
       } catch (error) {
          console.error("Error updating todo:", error);
       }
    };
 
-   const handleToggle = async () => {
+   const toggleAPI = async () => {
       try {
          await request.put(`todo/${todo.id}`, { completed: !todo.completed });
-         dispatch(toggleToDo(todo.id));
       } catch (error) {
          console.error("Error toggling todo:", error);
       }
+   }
+   const handleToggle = () => {
+      dispatch(toggleToDo(todo.id));
+      toggleAPI();
    };
 
    return (

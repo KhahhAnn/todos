@@ -31,17 +31,21 @@ const Footer = ({ onFilterChange, theme }) => {
       onFilterChange(filterType);
    };
 
-   const handleClearCompleted = async () => {
+   const clearCompleteAPI = async () => {
       try {
          const completedIds = toDoItems.filter(todo => todo.completed).map(todo => todo.id);
          await Promise.all(completedIds.map(id => request.delete(`todo/${id}`)));
-         dispatch(clearComplete());
          onFilterChange(actionStatus.ALL);
       } catch (error) {
          console.error("Error clearing completed todos:", error);
       }
+   }
+   const handleClearCompleted = () => {
+      dispatch(clearComplete());
+      clearCompleteAPI();
    };
 
+   const completeItems = toDoItems.filter(todo => !todo.complete).length
    return (
       <div className="footer-container">
          <h3>{remainingCount} items left</h3>

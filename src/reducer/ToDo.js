@@ -1,4 +1,4 @@
-import { ADD_TODO, CHECK_ALL, CLEAR_COMPLETE, DELETE_TODO, TOGGLE_TODO, UPDATE_TODO } from "../actions/ToDo";
+import {GET_TODO, ADD_TODO, CHECK_ALL, CLEAR_COMPLETE, DELETE_TODO, TOGGLE_TODO, UPDATE_TODO } from "../actions/ToDo";
 import { produce } from "immer";
 
 
@@ -9,6 +9,10 @@ const initialState = {
 const todoReducer = (state = initialState, action) => {
    return produce(state, draftState => {
       switch (action.type) {
+         case GET_TODO: {
+            draftState.toDoList = action.payload;
+            break;
+         }
          case ADD_TODO: {
             draftState.toDoList.unshift(action.payload);
             break;
