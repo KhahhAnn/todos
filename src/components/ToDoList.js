@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "../Css/ToDoCss.css";
-import { actionStatus } from "../utils/utils";
+import { GET_TODO, actionStatus } from "../utils/utils";
 import Body from "./Body";
 import Footer from "./Footer";
 import Header from "./Header";
@@ -18,15 +18,7 @@ const ToDoList = () => {
    const { theme } = useTheme();
 
    useEffect(() => {
-      const fetchData = async () => {
-         try {
-            const response = await request.get("todo");
-            dispatch(getToDo(response))
-         } catch (error) {
-            console.log(error);
-         }
-      }
-      fetchData();
+      dispatch({type: GET_TODO})
    }, [dispatch]) 
    useEffect(() => {
       setFilteredToDoItems(produce(toDoItems, (draftState) => {

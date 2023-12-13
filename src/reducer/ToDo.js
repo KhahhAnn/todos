@@ -1,4 +1,4 @@
-import {GET_TODO, ADD_TODO, CHECK_ALL, CLEAR_COMPLETE, DELETE_TODO, TOGGLE_TODO, UPDATE_TODO } from "../actions/ToDo";
+import {GET_TODO, ADD_TODO, CHECK_ALL, CLEAR_COMPLETE, DELETE_TODO, TOGGLE_TODO, UPDATE_TODO } from "../utils/utils";
 import { produce } from "immer";
 
 
