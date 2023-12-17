@@ -19,7 +19,8 @@ const ToDoItem = ({ todo }) => {
    };
 
    const handleSaveEdit = () => {
-      dispatch({type: UPDATE_TODO, payload: (todo.id, editText)});
+      const todoEit = {id: todo.id, content: editText};
+      dispatch({type: UPDATE_TODO, payload: todoEit});
       setEditableId(null);
    };
 

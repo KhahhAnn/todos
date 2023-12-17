@@ -24,7 +24,7 @@ const Header = ({theme }) => {
          setToDo("");
          const itemAdd = {
             content: toDo.trim(),
-               complete: false,
+            complete: false,
          }
          dispatch({type: ADD_TODO, payload: itemAdd});
       }
