@@ -1,31 +1,27 @@
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { clearComplete } from "../actions/ToDo";
-import { DELETE_TODO, GET_TODO, actionStatus } from "../utils/utils";
 import request from "../utils/request";
-import { useEffect, useState } from "react";
+import { DELETE_TODO, actionStatus } from "../utils/utils";
 
 const Footer = ({ onFilterChange, theme }) => {
    const dispatch = useDispatch();
    const toDoItems = useSelector((state) => state.toDo.toDoList)
    const [remainingCount, setRemainingCount] = useState(0);
    const [completeCount, setCompleteCount] = useState(0);
+   useEffect(() => {
+      const fetchData = async () => {
+         try {
+            const response = await request.get("todo")
+            setCompleteCount(response.data.filter((todo) => todo.completed).length);
+            setRemainingCount(response.data.length - completeCount);
+         } catch (error) {
+            console.log(console.error(error));
+         }
+      }
+      fetchData();
 
-   // useEffect(() => {
-   //    dispatch({type: GET_TODO})
-   // }, [dispatch])
-   // useEffect(() => {
-   //    const fetchData = async () => {
-   //       try {
-   //          const response = await request.get("todo")
-   //          setCompleteCount(response.data.filter((todo) => todo.completed).length);
-   //          setRemainingCount(response.data.length - completeCount);
-   //       } catch (error) {
-   //          console.log(console.error(error));
-   //       }
-   //    }
-   //    fetchData();
-
-   // }, [toDoItems, completeCount]);
+   }, [toDoItems, completeCount]);
 
 
 
@@ -47,7 +43,7 @@ const Footer = ({ onFilterChange, theme }) => {
 
    return (
       <div className="footer-container">
-         <h3> items left</h3>
+         <h3>{remainingCount} items left</h3>
          <div className={`option-container ${theme === "dark" ? "dark-option" : ""}`}>
             <a href="#" onClick={() => handleFilterChange(actionStatus.ALL)}>All</a>
             <a href="#" onClick={() => handleFilterChange(actionStatus.ACTIVATE)}>Active</a>

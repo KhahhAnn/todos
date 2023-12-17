@@ -7,8 +7,7 @@ import Footer from "./Footer";
 import Header from "./Header";
 import { useTheme } from "./ThemeContext";
 import ToggleTheme from "./ToggleTheme";
-import { produce } from "immer";
-import request from "../utils/request";
+import produce from "immer";
 import { getToDo } from "../actions/ToDo";
 const ToDoList = () => {
    const dispatch =  useDispatch();
@@ -18,7 +17,7 @@ const ToDoList = () => {
    const { theme } = useTheme();
 
    useEffect(() => {
-      dispatch({type: GET_TODO})
+      dispatch(GET_TODO);
    }, [dispatch]) 
    useEffect(() => {
       setFilteredToDoItems(produce(toDoItems, (draftState) => {

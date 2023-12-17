@@ -2,47 +2,31 @@ import { useRef, useState } from "react";
 import { AiOutlineDown } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 import { addToDo, checkAll } from "../actions/ToDo";
-import request from "../utils/request";
+import { ADD_TODO, CHECK_ALL } from "../utils/utils";
 
 const Header = ({theme }) => {
    const dispatch = useDispatch();
    const inputRef = useRef();
    const [toDo, setToDo] = useState("");
-
-   const checkAllAPI = async () => {
-      try {
-         const response = await request.get("todo");
-         const todos = response.data;
-         console.log(todos);
-         for (const todo of todos) {
-            const updatedTodo = { ...todo, complete: !todo.complete };
-            await request.put(`todo/${todo.id}`, updatedTodo);
-         }
-      } catch (error) {
-         console.log(error);
-      }
-   };
-
+   
    const handleCheckAll = () => {
       dispatch(checkAll());
-      checkAllAPI();
+      dispatch({type: CHECK_ALL})
    }
+
    const handleInputChange = (e) => {
       setToDo(e.target.value);
    };
 
-   const handleKeyPress = async (e) => {
+   const handleKeyPress = (e) => {
       if (e.key === "Enter" && toDo.trim() !== "") {
          dispatch(addToDo(toDo.trim()));
          setToDo("");
-         try{
-            await request.post("todo", {
-               content: toDo.trim(),
+         const itemAdd = {
+            content: toDo.trim(),
                complete: false,
-            })
-         } catch (error) {
-            console.error(error);
          }
+         dispatch({type: ADD_TODO, payload: itemAdd});
       }
    };
 

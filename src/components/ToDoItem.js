@@ -2,44 +2,30 @@ import React, { useState } from "react";
 import { AiFillEdit } from "react-icons/ai";
 import { FaTrash } from "react-icons/fa";
 import { useDispatch } from "react-redux";
-import { deleteToDo, toggleToDo, updateToDo } from "../actions/ToDo";
-import request from "../utils/request";
+import { toggleToDo } from "../actions/ToDo";
+import { DELETE_TODO, TOGGLE_TODO, UPDATE_TODO } from "../utils/utils";
 
 const ToDoItem = ({ todo }) => {
    const [editText, setEditText] = useState("");
    const [editableId, setEditableId] = useState(null);
    const dispatch = useDispatch();
 
-   const handleDelete = async () => {
-      dispatch(deleteToDo(todo.id));
-      try {
-         await request.delete(`todo/${todo.id}`);
-      } catch (error) {
-         console.error(error);
-      }
-      dispatch(deleteToDo(todo.id));
+   const handleDelete =  () => {
+      dispatch({type: DELETE_TODO, payload: todo.id});
    };
 
    const handleCancelEdit = () => {
       setEditableId(null);
    };
 
-   const handleSaveEdit = async () => {
-      dispatch(updateToDo(todo.id, editText));
+   const handleSaveEdit = () => {
+      dispatch({type: UPDATE_TODO, payload: (todo.id, editText)});
       setEditableId(null);
-      try {
-         await request.put(`todo/${todo.id}`, { content: editText });
-      } catch (error) {
-         console.error("Error updating todo:", error);
-      }
    };
 
-   const toggleAPI = async () => {
-      try {
-         await request.put(`todo/${todo.id}`, { completed: !todo.completed });
-      } catch (error) {
-         console.error("Error toggling todo:", error);
-      }
+   const toggleAPI = () => {
+      dispatch({ type: TOGGLE_TODO, payload: todo });
+
    }
    const handleToggle = () => {
       dispatch(toggleToDo(todo.id));

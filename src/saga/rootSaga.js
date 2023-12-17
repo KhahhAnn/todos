@@ -1,9 +1,9 @@
 import { all } from "redux-saga/effects";
-import toDoSaga from "./saga";
+import toDoWatcher from "./saga";
 
 function* sagaRoot() {
    yield all([
-      toDoSaga(),
+      toDoWatcher(),
    ])
 }
 export default sagaRoot;

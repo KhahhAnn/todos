@@ -1,7 +1,6 @@
 import { v4 as uuid } from "uuid";
 import { ADD_TODO, CHECK_ALL, CLEAR_COMPLETE, DELETE_TODO, GET_TODO, TOGGLE_TODO, UPDATE_TODO } from "../utils/utils";
 
-
 export const getToDo = (todos) => {
    return {
       type: GET_TODO,
