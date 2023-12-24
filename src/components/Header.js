@@ -3,6 +3,7 @@ import { AiOutlineDown } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 import { addToDo, checkAll } from "../actions/ToDo";
 import { ADD_TODO, CHECK_ALL } from "../utils/utils";
+import {Navigate} from 'react-router-dom';
 
 const Header = ({theme }) => {
    const dispatch = useDispatch();
@@ -27,6 +28,7 @@ const Header = ({theme }) => {
             complete: false,
          }
          dispatch({type: ADD_TODO, payload: itemAdd});
+         return <Navigate to={"/todolist"} />;
       }
    };
 
